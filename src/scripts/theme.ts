@@ -20,6 +20,7 @@ let manual = storedTheme();
 let theme: Theme = manual ?? (system.matches ? "dark" : "light");
 
 function apply(document: Document): void {
+  document.documentElement.dataset.js = "";
   document.documentElement.dataset.theme = theme;
   document.documentElement.classList.toggle("dark", theme === "dark");
 }

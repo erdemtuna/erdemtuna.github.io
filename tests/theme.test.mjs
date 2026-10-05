@@ -88,10 +88,15 @@ test("saved manual preference wins over current and later OS changes", () => {
 
 test("Astro swaps carry the theme before paint and never duplicate button listeners", () => {
   const browser = harness("dark");
-  for (let i = 0; i < 5; i++) browser.listeners["astro:after-swap"]();
+  for (let i = 0; i < 5; i++) {
+    delete browser.root.dataset.js;
+    browser.listeners["astro:after-swap"]();
+    assert.equal(browser.root.dataset.js, "");
+  }
   assert.equal(browser.clicks.length, 1);
   const next = { documentElement: { dataset: {}, classList: { toggle() {} } } };
   browser.listeners["astro:before-swap"]({ newDocument: next });
+  assert.equal(next.documentElement.dataset.js, "");
   assert.equal(next.documentElement.dataset.theme, "dark");
   browser.clicks[0]();
   assert.equal(browser.root.dataset.theme, "light");

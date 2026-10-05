@@ -40,6 +40,10 @@ file is removed. A narrow `freshGlob` wrapper clears the collection snapshot bef
 calling the original loader, preserving its validation and dev watcher. Returning
 to zero posts therefore removes pages, social images, and asset imports even with
 an existing cache; regression fixtures exercise this transition.
+For an initially empty dev collection, the wrapper temporarily listens only within
+that collection's base until the original glob watcher can initialize. Its normal
+schema, matching, edits and deletions then take over; repeated syncs replace rather
+than duplicate listeners. The first article can be added without restarting dev.
 
 ## One public settings file
 
@@ -161,6 +165,17 @@ overrides, guest authors and draft/future exclusion, then removes them and
 restores the normal build. Fixture files are never published or committed.
 The fixture command refuses to overwrite existing paths.
 The reserved `validation-fixture-*` prefix is Git-ignored as an additional safeguard.
+
+To reproduce first-article authoring, start `pnpm run dev --host 127.0.0.1 --port 4331`
+with no posts, then run `node scripts/check-dev-lifecycle.mjs http://127.0.0.1:4331`
+in another terminal. It checks schema rejection/recovery, Markdown/MDX additions,
+edits and deletions, article routes, and search empty/control states without a
+server restart, then removes its reserved fixtures. Actual Pagefind results still
+require a production build; dev does not rebuild the search index.
+The live check uses unique slugs per run to exercise new-article discovery. In the
+pinned Astro version, re-adding byte-identical MDX at a previously compiled path
+can leave the dev runtime cache stale; restart dev if that separate cache edge
+case is encountered. Production builds reconcile collections from source.
 
 PR CI validates but **does not deploy**. Local browser checks should also inspect
 320px/mobile and desktop, light/dark, keyboard focus/menu/search, reduced motion,
