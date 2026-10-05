@@ -27,12 +27,22 @@ const filteredPosts = posts.filter(postFilter);
 const monthFormatter = new Intl.DateTimeFormat(locale, { month: "long" });
 ---
 
-<Layout title={`${t.pages.archivesTitle} | ${config.site.title}`}>
+<Layout
+  title={`${t.pages.archivesTitle} | ${config.site.title}`}
+  description={t.pages.archivesDesc}
+>
   <Header />
 
   <Breadcrumb />
 
   <Main pageTitle={t.pages.archivesTitle} pageDesc={t.pages.archivesDesc}>
+    {
+      filteredPosts.length === 0 && (
+        <p class="page-description">
+          The archive will begin with the first published post.
+        </p>
+      )
+    }
     {
       Object.entries(
         getPostsByGroupCondition(filteredPosts, post =>

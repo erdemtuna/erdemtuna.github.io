@@ -31,3 +31,6 @@ public/pagefind
 
 # docker compose
 compose.override.yaml
+
+# Reserved for local regression fixtures; never publish these files.
+src/content/posts/validation-fixture-*

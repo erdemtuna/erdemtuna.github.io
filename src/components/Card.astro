@@ -3,22 +3,42 @@ import type { CollectionEntry } from "astro:content";
 import { getPostUrl } from "@/utils/getPostPaths";
 import { toTransitionName } from "@/utils/toTransitionName";
 import Datetime from "./Datetime.astro";
+import PostCover from "./PostCover.astro";
+import config from "@/config";
 
 type Props = {
   variant?: "h2" | "h3";
+  featured?: boolean;
+  showCover?: boolean;
 } & CollectionEntry<"posts">;
 
-const { variant: Heading = "h2", id, data, filePath } = Astro.props;
+const {
+  variant: Heading = "h2",
+  id,
+  data,
+  filePath,
+  featured = false,
+  showCover = false,
+} = Astro.props;
 
 const { title, description, ...props } = data;
 ---
 
-<li class="my-6">
+<li class:list={["post-card", { "featured-card": featured }]}>
+  {
+    showCover && (
+      <PostCover
+        {data}
+        eager={featured}
+        widthRem={config.design.layout.siteWidthRem - 4}
+      />
+    )
+  }
   <a
     href={getPostUrl(id, filePath, Astro.currentLocale)}
     class:list={[
-      "text-accent inline-block text-lg font-medium",
-      "decoration-dashed underline-offset-4 hover:underline",
+      "inline-block",
+      "underline-offset-4 hover:underline",
       "focus-visible:no-underline focus-visible:underline-offset-0",
     ]}
   >
@@ -26,6 +46,6 @@ const { title, description, ...props } = data;
       {title}
     </Heading>
   </a>
-  <Datetime {...props} />
+  <Datetime {...props} class="datetime" />
   <p>{description}</p>
 </li>

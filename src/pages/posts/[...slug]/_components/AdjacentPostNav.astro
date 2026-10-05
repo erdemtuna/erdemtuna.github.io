@@ -26,12 +26,12 @@ const t = useTranslations(locale);
     prevPost && (
       <a
         href={getPostUrl(prevPost.id, prevPost.filePath, locale)}
-        class="flex w-full gap-1 hover:opacity-75"
+        class="hover:text-accent flex w-full min-w-0 gap-1"
       >
         <IconArrowLeft class="inline-block flex-none rtl:rotate-180" />
-        <div>
+        <div class="min-w-0">
           <span>{t.post.previousPost}</span>
-          <div class="text-accent/85 text-sm">{prevPost.title}</div>
+          <div class="text-accent text-sm wrap-anywhere">{prevPost.title}</div>
         </div>
       </a>
     )
@@ -40,11 +40,11 @@ const t = useTranslations(locale);
     nextPost && (
       <a
         href={getPostUrl(nextPost.id, nextPost.filePath, locale)}
-        class="flex w-full justify-end gap-1 text-end hover:opacity-75 sm:col-start-2"
+        class="hover:text-accent flex w-full min-w-0 justify-end gap-1 text-end sm:col-start-2"
       >
-        <div>
+        <div class="min-w-0">
           <span>{t.post.nextPost}</span>
-          <div class="text-accent/85 text-sm">{nextPost.title}</div>
+          <div class="text-accent text-sm wrap-anywhere">{nextPost.title}</div>
         </div>
         <IconArrowRight class="inline-block flex-none rtl:rotate-180" />
       </a>

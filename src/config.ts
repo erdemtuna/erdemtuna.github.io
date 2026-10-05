@@ -23,8 +23,7 @@ const config: ResolvedAstroPaperConfig = {
   posts: {
     perPage: userConfig.posts?.perPage ?? 4,
     perIndex: userConfig.posts?.perIndex ?? 4,
-    scheduledPostMargin:
-      userConfig.posts?.scheduledPostMargin ?? 15 * 60 * 1000,
+    scheduledPostMargin: userConfig.posts?.scheduledPostMargin ?? 0,
   },
   features: {
     lightAndDarkMode: userConfig.features?.lightAndDarkMode ?? true,
@@ -36,6 +35,8 @@ const config: ResolvedAstroPaperConfig = {
   },
   socials: userConfig.socials ?? [],
   shareLinks: userConfig.shareLinks ?? [],
+  design: userConfig.design,
+  home: userConfig.home,
 };
 
 export default config;

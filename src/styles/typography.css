@@ -4,6 +4,17 @@
   /* ===== Override default Tailwind Typography styles ===== */
   .app-prose {
     @apply prose;
+    font-family: var(--font-body);
+    font-size: var(--body-size);
+    line-height: var(--body-leading);
+    max-width: var(--reading-width);
+    --tw-prose-body: var(--foreground);
+    --tw-prose-headings: var(--foreground);
+    --tw-prose-bold: var(--foreground);
+    --tw-prose-quotes: var(--foreground);
+    --tw-prose-links: var(--accent);
+    --tw-prose-counters: var(--muted);
+    --tw-prose-bullets: var(--accent);
 
     h1,
     h2,
@@ -12,16 +23,19 @@
     th {
       @apply text-foreground mb-3;
     }
-
-    h3 {
-      @apply italic;
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
+      font-weight: 400;
     }
 
     p,
     strong,
     ol,
     ul,
-    figcaption,
     table,
     code {
       @apply text-foreground;
@@ -56,7 +70,8 @@
     }
 
     figcaption {
-      @apply opacity-75;
+      color: var(--muted);
+      font: 0.8125rem/1.6 var(--font-ui);
     }
 
     table {
@@ -94,7 +109,27 @@
     }
 
     blockquote {
-      @apply border-s-accent/80 wrap-break-word opacity-80;
+      @apply border-s-accent bg-muted wrap-break-word;
+      padding: 0.75rem 1.25rem;
+      font-weight: 400;
+      font-style: normal;
+      p::before,
+      p::after {
+        content: none;
+      }
+    }
+    .app-prose pre,
+    .app-prose table {
+      font-size: 0.875rem;
+    }
+    .app-prose pre {
+      max-width: 100%;
+      overflow-x: auto;
+    }
+    .app-prose .callout {
+      color: var(--foreground);
+      background: var(--wash);
+      border-color: var(--accent);
     }
 
     details:not(.callout) {

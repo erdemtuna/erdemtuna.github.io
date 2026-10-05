@@ -1,69 +1,70 @@
-const THEME_KEY = "theme";
-const LIGHT = "light";
-const DARK = "dark";
+type Theme = "light" | "dark";
+const system = window.matchMedia("(prefers-color-scheme: dark)");
+const bound = new WeakSet<Element>();
 
-function getPreferredTheme(): string {
-  const stored = localStorage.getItem(THEME_KEY);
-  if (stored) return stored;
-  return window.matchMedia("(prefers-color-scheme: dark)").matches
-    ? DARK
-    : LIGHT;
+function storedTheme(): Theme | null {
+  try {
+    const value = localStorage.getItem("theme");
+    return value === "light" || value === "dark" ? value : null;
+  } catch (error) {
+    // eslint-disable-next-line no-console
+    console.warn(
+      "Theme storage unavailable; using this session's preference.",
+      error
+    );
+    return null;
+  }
 }
 
-// Reuse the value already set by the inline FOUC-prevention script if available.
-let themeValue: string =
-  (window as unknown as { __theme?: { value: string } }).__theme?.value ??
-  getPreferredTheme();
+let manual = storedTheme();
+let theme: Theme = manual ?? (system.matches ? "dark" : "light");
 
-function persist(): void {
-  localStorage.setItem(THEME_KEY, themeValue);
-  reflect();
-}
-
-function reflect(): void {
-  const root = document.firstElementChild;
-  root?.setAttribute("data-theme", themeValue);
-  root?.classList.toggle("dark", themeValue === DARK);
-  document.querySelector("#theme-btn")?.setAttribute("aria-label", themeValue);
-
-  // Fill <meta name="theme-color"> with the computed background colour so
-  // Android's browser chrome matches the page background.
-  const bg = window.getComputedStyle(document.body).backgroundColor;
-  document
-    .querySelector("meta[name='theme-color']")
-    ?.setAttribute("content", bg);
+function apply(document: Document): void {
+  document.documentElement.dataset.theme = theme;
+  document.documentElement.classList.toggle("dark", theme === "dark");
 }
 
 function setup(): void {
-  reflect();
-  document.querySelector("#theme-btn")?.addEventListener("click", () => {
-    themeValue = themeValue === LIGHT ? DARK : LIGHT;
-    persist();
-  });
+  apply(document);
+  const button = document.querySelector("#theme-btn");
+  button?.setAttribute(
+    "aria-label",
+    `Switch to ${theme === "light" ? "dark" : "light"} theme`
+  );
+  document
+    .querySelector("meta[name='theme-color']")
+    ?.setAttribute("content", getComputedStyle(document.body).backgroundColor);
+  if (button && !bound.has(button)) {
+    bound.add(button);
+    button.addEventListener("click", () => {
+      manual = theme = theme === "light" ? "dark" : "light";
+      try {
+        localStorage.setItem("theme", theme);
+      } catch (error) {
+        // eslint-disable-next-line no-console
+        console.warn(
+          "Theme choice cannot be saved; it will last for this session.",
+          error
+        );
+      }
+      setup();
+    });
+  }
 }
 
 setup();
-
-// Re-run after View Transitions navigation.
 document.addEventListener("astro:after-swap", setup);
-
-// Carry the theme-color value across View Transitions to prevent the
-// Android navigation bar from flashing during page transitions.
 document.addEventListener("astro:before-swap", event => {
-  const color = document
-    .querySelector("meta[name='theme-color']")
-    ?.getAttribute("content");
-  if (color) {
-    (event as { newDocument: Document }).newDocument
-      .querySelector("meta[name='theme-color']")
-      ?.setAttribute("content", color);
-  }
+  apply((event as Event & { newDocument: Document }).newDocument);
 });
-
-// Sync with OS-level dark/light preference changes.
-window
-  .matchMedia("(prefers-color-scheme: dark)")
-  .addEventListener("change", ({ matches }) => {
-    themeValue = matches ? DARK : LIGHT;
-    persist();
-  });
+system.addEventListener("change", ({ matches }) => {
+  if (manual !== null) return;
+  theme = matches ? "dark" : "light";
+  setup();
+});
+window.addEventListener("storage", event => {
+  if (event.key !== "theme" && event.key !== null) return;
+  manual = storedTheme();
+  theme = manual ?? (system.matches ? "dark" : "light");
+  setup();
+});
