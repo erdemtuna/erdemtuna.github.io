@@ -16,6 +16,6 @@ I've been extending Doc Review around that interaction. It opens a Markdown docu
 
 The latest version keeps those conversations attached to the relevant passages and makes the replies and changes easier to follow. Questions and requests for changes are separate, so asking about a design decision does not tell the agent to start changing it.
 
-Link: [https://lnkd.in/eP3\_gpaE](https://lnkd.in/eP3_gpaE)
+Link: [https://github.com/erdemtuna/doc-review](https://github.com/erdemtuna/doc-review)
 
 ![graphical user interface, text, application, email](./_images/doc-review/attachment.jpg)
