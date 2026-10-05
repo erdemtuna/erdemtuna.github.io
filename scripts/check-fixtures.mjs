@@ -1,7 +1,18 @@
 import assert from "node:assert/strict";
-import { access, readFile, writeFile, rm } from "node:fs/promises";
+import {
+  access,
+  cp,
+  mkdir,
+  mkdtemp,
+  readFile,
+  readdir,
+  writeFile,
+  rm,
+  symlink,
+} from "node:fs/promises";
 import { spawnSync } from "node:child_process";
-import { join } from "node:path";
+import { join, resolve } from "node:path";
+import { tmpdir } from "node:os";
 import sharp from "sharp";
 import { checkOutput } from "./check-output.mjs";
 
@@ -54,6 +65,38 @@ if (process.argv.includes("--cleanup")) {
   await cleanup();
   process.exit(0);
 }
+const originalRoot = process.cwd();
+const fixtureRoot = await mkdtemp(join(tmpdir(), "astro-paper-fixtures-"));
+try {
+  const excluded = new Set([".git", ".astro", "dist", "node_modules"]);
+  const postsRoot = resolve(folder);
+  for (const entry of await readdir(originalRoot)) {
+    if (excluded.has(entry)) continue;
+    await cp(join(originalRoot, entry), join(fixtureRoot, entry), {
+      recursive: true,
+      filter: path => resolve(path) !== postsRoot,
+    });
+  }
+  await mkdir(join(fixtureRoot, folder), { recursive: true });
+  if (process.platform === "win32") {
+    await symlink(
+      join(originalRoot, "node_modules"),
+      join(fixtureRoot, "node_modules"),
+      "junction"
+    );
+  } else {
+    // Astro's Linux compiler needs dependency components inside the build root.
+    await cp(
+      join(originalRoot, "node_modules"),
+      join(fixtureRoot, "node_modules"),
+      { recursive: true, verbatimSymlinks: true }
+    );
+  }
+} catch (error) {
+  await rm(fixtureRoot, { recursive: true, force: true });
+  throw error;
+}
+process.chdir(fixtureRoot);
 for (const file of files) {
   await assert.rejects(
     access(file),
@@ -75,6 +118,11 @@ try {
     { flag: "wx" }
   );
   assert.match(build(false), /coverAlt|meaningful/i);
+  await writeFile(
+    files[1],
+    content("Source validation fixture", "sourceLabel: LinkedIn")
+  );
+  assert.match(build(false), /sourceUrl/);
   await writeFile(
     files[1],
     content(
@@ -103,7 +151,8 @@ try {
     files[1],
     content(
       "Cover fixture",
-      `featured: true\ncover: ./${prefix}image.png\ncoverAlt: Olive field for image validation\ncoverCaption: Local validation caption\ncanonicalURL: https://example.com/original/\nauthor: Guest Author`
+      `featured: true\ncover: ./${prefix}image.png\ncoverAlt: Olive field for image validation\ncoverCaption: Local validation caption\ncanonicalURL: https://example.com/original/\nsourceUrl: https://example.com/source/\nsourceLabel: LinkedIn\nmodDatetime: 2020-01-02T12:00:00Z\nauthor: Guest Author`,
+      `Fixture author's "original punctuation" -- including ... and an existing curly quote: ’.`
     )
   );
   await writeFile(files[2], content("Private draft sentinel", "draft: true"));
@@ -155,6 +204,18 @@ try {
     /rel="canonical" href="https:\/\/example.com\/original\/"/
   );
   assert.match(cover, /"name":"Guest Author"/);
+  assert.match(cover, /href="https:\/\/example.com\/source\/"/);
+  assert.ok(
+    cover.includes(
+      `Fixture author's "original punctuation" -- including ... and an existing curly quote: ’.`
+    ),
+    "Markdown must not rewrite original punctuation"
+  );
+  const feed = await readFile(join("dist", "rss.xml"), "utf8");
+  const coverItem = feed
+    .split("<item>")
+    .find(item => item.includes("Cover fixture"));
+  assert.match(coverItem, /<pubDate>Wed, 01 Jan 2020 12:00:00 GMT<\/pubDate>/);
   assert.ok(
     !cover.includes('"name":"Guest Author","url"'),
     "Guest must not inherit site author's profile"
@@ -194,13 +255,32 @@ try {
   );
   passed = true;
 } finally {
-  if (!keep || !passed) {
-    await cleanup();
-    build();
-    await checkOutput();
-  } else {
-    process.stdout.write(
-      "Local fixtures retained for browser checks only. Run pnpm run test:fixtures --cleanup before committing, then rebuild.\n"
-    );
+  try {
+    if (!keep || !passed) {
+      await cleanup();
+      if (passed) {
+        build();
+        await checkOutput();
+        const home = await readFile(join("dist", "index.html"), "utf8");
+        assert.match(
+          home,
+          /No posts yet/,
+          "Isolated empty fixture stays valid"
+        );
+        const search = await readFile(
+          join("dist", "search", "index.html"),
+          "utf8"
+        );
+        assert.match(search, /No published writing to search yet/);
+      }
+    } else {
+      process.stdout.write(
+        `Local browser fixtures retained at ${fixtureRoot}.\n`
+      );
+    }
+  } finally {
+    process.chdir(originalRoot);
+    if (!keep || !passed)
+      await rm(fixtureRoot, { recursive: true, force: true });
   }
 }

@@ -23,10 +23,18 @@ const posts = defineCollection({
         coverCaption: z.string().trim().min(1).optional(),
         description: z.string(),
         canonicalURL: z.url({ protocol: /^https?$/ }).optional(),
+        sourceUrl: z.url({ protocol: /^https?$/ }).optional(),
+        sourceLabel: z.string().trim().min(1).optional(),
         hideEditPost: z.boolean().optional(),
         timezone: z.string().optional(),
       })
       .superRefine((post, ctx) => {
+        if (post.sourceLabel && !post.sourceUrl)
+          ctx.addIssue({
+            code: "custom",
+            path: ["sourceUrl"],
+            message: "sourceLabel requires a sourceUrl.",
+          });
         if (post.cover && !post.coverAlt)
           ctx.addIssue({
             code: "custom",

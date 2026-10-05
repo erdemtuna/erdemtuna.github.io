@@ -51,6 +51,11 @@ For a cover, add `cover: ./images/photo.jpg`, a meaningful `coverAlt`, and an
 optional `coverCaption`. Social images are generated automatically unless you
 provide `ogImage`.
 
+For republished writing, `sourceUrl` and optional `sourceLabel` add a source
+link beside the date without changing the site's canonical URL. Keep the
+original `pubDatetime` and, when known, `modDatetime`.
+Markdown punctuation is preserved without automatic quote or dash substitutions.
+
 **This repository is public. `draft: true` hides a post from the website, not
 from GitHub. Keep private drafts and images outside the repository.**
 
