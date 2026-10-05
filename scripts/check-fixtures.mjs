@@ -78,11 +78,20 @@ try {
     });
   }
   await mkdir(join(fixtureRoot, folder), { recursive: true });
-  await symlink(
-    join(originalRoot, "node_modules"),
-    join(fixtureRoot, "node_modules"),
-    process.platform === "win32" ? "junction" : "dir"
-  );
+  if (process.platform === "win32") {
+    await symlink(
+      join(originalRoot, "node_modules"),
+      join(fixtureRoot, "node_modules"),
+      "junction"
+    );
+  } else {
+    // Astro's Linux compiler needs dependency components inside the build root.
+    await cp(
+      join(originalRoot, "node_modules"),
+      join(fixtureRoot, "node_modules"),
+      { recursive: true, verbatimSymlinks: true }
+    );
+  }
 } catch (error) {
   await rm(fixtureRoot, { recursive: true, force: true });
   throw error;
@@ -249,15 +258,21 @@ try {
   try {
     if (!keep || !passed) {
       await cleanup();
-      build();
-      await checkOutput();
-      const home = await readFile(join("dist", "index.html"), "utf8");
-      assert.match(home, /No posts yet/, "Isolated empty fixture stays valid");
-      const search = await readFile(
-        join("dist", "search", "index.html"),
-        "utf8"
-      );
-      assert.match(search, /No published writing to search yet/);
+      if (passed) {
+        build();
+        await checkOutput();
+        const home = await readFile(join("dist", "index.html"), "utf8");
+        assert.match(
+          home,
+          /No posts yet/,
+          "Isolated empty fixture stays valid"
+        );
+        const search = await readFile(
+          join("dist", "search", "index.html"),
+          "utf8"
+        );
+        assert.match(search, /No published writing to search yet/);
+      }
     } else {
       process.stdout.write(
         `Local browser fixtures retained at ${fixtureRoot}.\n`
