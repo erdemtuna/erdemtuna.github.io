@@ -2,7 +2,7 @@ import { defineAstroPaperConfig } from "./src/types/config";
 
 export default defineAstroPaperConfig({
   site: {
-    url: "https://erdemtuna.github.io",
+    url: "https://erdemtuna.dev",
     title: "Erdem Tuna",
     description: "Personal writing and notes by Erdem Tuna.",
     author: "Erdem Tuna",

@@ -2,7 +2,7 @@
 
 My personal website, built with [AstroPaper](https://github.com/satnaing/astro-paper).
 
-**[View the website](https://erdemtuna.github.io/)**
+**[View the website](https://erdemtuna.dev/)**
 
 ## Run locally
 
@@ -66,9 +66,8 @@ Future posts appear only after their publication date and a new build.
 Pushes to `main` deploy through GitHub Actions. Pull requests run checks without
 publishing. CI covers formatting, lint, tests and the production build.
 
-For a custom domain, verify ownership, configure the domain, DNS and HTTPS in
-[GitHub Pages](https://docs.github.com/en/pages/configuring-a-custom-domain-for-your-github-pages-site),
-then update `site.url` in the config. Keep the base path `/`. Actions publishing
-uses the Pages domain setting, not a CNAME file.
+The custom domain is `erdemtuna.dev`. `site.url` in the config supplies the
+origin for canonical links, social metadata, RSS, sitemap and robots. Keep the
+base path `/`. Actions publishing uses the Pages domain setting, not a CNAME file.
 
 Based on AstroPaper 6.1.0, upstream snapshot `35cfa7f`. [MIT license](LICENSE).

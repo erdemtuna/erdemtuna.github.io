@@ -14,7 +14,7 @@ test("article schema uses visible author, raw headline, absolute URL/image and I
     siteAuthor: "Erdem Tuna",
     profile: "https://github.com/erdemtuna",
     url: "https://example.com/original/",
-    image: "https://erdemtuna.github.io/posts/article/index.png",
+    image: "https://example.com/posts/article/index.png",
     published: new Date("2020-01-01T12:00:00Z"),
     modified: new Date("2020-02-01T12:00:00Z"),
   });
@@ -33,8 +33,8 @@ test("JSON-LD cannot close its HTML script and missing modification date uses pu
     author: "Erdem Tuna",
     siteAuthor: "Erdem Tuna",
     profile: "https://github.com/erdemtuna",
-    url: "https://erdemtuna.github.io/posts/test/",
-    image: "https://erdemtuna.github.io/og.png",
+    url: "https://example.com/posts/test/",
+    image: "https://example.com/og.png",
     published: new Date("2020-01-01"),
   });
   const json = jsonForHtml(schema);
