@@ -51,6 +51,8 @@ const {
   description,
   ogImage,
   canonicalURL,
+  sourceUrl,
+  sourceLabel,
   pubDatetime,
   modDatetime,
   timezone,
@@ -88,6 +90,13 @@ const image =
     <div class="post-meta">
       <span>{author}</span>
       <Datetime {pubDatetime} {modDatetime} {timezone} />
+      {
+        sourceUrl && (
+          <a href={sourceUrl} data-pagefind-ignore>
+            {sourceLabel ?? new URL(sourceUrl).hostname}
+          </a>
+        )
+      }
       <EditPost {hideEditPost} {post} />
     </div>
     <PostCover data={post.data} eager />
