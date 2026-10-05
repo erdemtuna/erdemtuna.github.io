@@ -83,14 +83,35 @@ const images = [
   ],
 ];
 const hash = bytes => createHash("sha256").update(bytes).digest("hex");
+const originalProjectLinks = new Map([
+  ["prompt-bank", "[https://lnkd.in/ed2AyPQh](https://lnkd.in/ed2AyPQh)"],
+  ["doc-review", "[https://lnkd.in/eP3\\_gpaE](https://lnkd.in/eP3_gpaE)"],
+]);
 
-test("five as-is imports retain their source-verified bodies and original dates", async () => {
+test("five imports retain original bodies and dates except resolved project URLs", async () => {
   for (const [slug, published, modified, bodyHash] of archives) {
     const markdown = (
       await readFile(new URL(`${slug}.md`, posts), "utf8")
     ).replaceAll("\r\n", "\n");
     const [, frontmatter, body] = markdown.split("---\n");
-    assert.equal(hash(body.trim()), bodyHash, `${slug}: source-verified body`);
+    let originalBody = body;
+    const originalLink = originalProjectLinks.get(slug);
+    if (originalLink) {
+      const url = `https://github.com/erdemtuna/${slug}`;
+      const directLink = `[${url}](${url})`;
+      assert.equal(
+        body.split(directLink).length,
+        2,
+        `${slug}: direct GitHub URL`
+      );
+      assert.ok(!body.includes("https://lnkd.in/"), `${slug}: no short links`);
+      originalBody = body.replace(directLink, originalLink);
+    }
+    assert.equal(
+      hash(originalBody.trim()),
+      bodyHash,
+      `${slug}: source-verified body apart from the approved URL replacement`
+    );
     assert.ok(frontmatter.includes(`pubDatetime: ${published}\n`));
     if (modified) assert.ok(frontmatter.includes(`modDatetime: ${modified}\n`));
     else assert.ok(!frontmatter.includes("modDatetime:"));

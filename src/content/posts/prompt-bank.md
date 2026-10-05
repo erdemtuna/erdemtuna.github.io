@@ -12,7 +12,7 @@ I had been keeping my most used prompts in local files and a notebook. Over time
 
 So, I made those parts explicit. In Prompt Bank, a prompt is a Markdown file that declares the parts that change as variables, and the parts you only sometimes want as optional sections. The app reads the file and gives you a form: fill in the variables, toggle the sections you want, check the composed text, copy it into whatever tool you use.
 
-Link: [https://lnkd.in/ed2AyPQh](https://lnkd.in/ed2AyPQh)
+Link: [https://github.com/erdemtuna/prompt-bank](https://github.com/erdemtuna/prompt-bank)
 
 They stay ordinary files, so where they live is up to you. You can keep a personal set of your own, and any project you open can carry its own, so a team can share the same prompts.
 
