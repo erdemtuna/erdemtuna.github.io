@@ -27,7 +27,14 @@ export default defineAstroPaperConfig({
     },
     search: "pagefind",
   },
-  socials: [{ name: "github", url: "https://github.com/erdemtuna" }],
+  socials: [
+    { name: "github", url: "https://github.com/erdemtuna" },
+    {
+      name: "linkedin",
+      url: "https://www.linkedin.com/in/erdem-tuna/",
+      linkTitle: "Erdem Tuna on LinkedIn",
+    },
+  ],
   shareLinks: [],
   design: {
     light: {
