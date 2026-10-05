@@ -21,14 +21,28 @@ const { page } = Astro.props;
 
 const locale = Astro.currentLocale ?? config.site.lang;
 const t = useTranslations(locale);
+const pageTitle = `${t.pages.postsTitle}${page.currentPage > 1 ? ` - Page ${page.currentPage}` : ""}`;
 ---
 
-<Layout title={`${t.pages.postsTitle} | ${config.site.title}`}>
+<Layout
+  title={`${pageTitle} | ${config.site.title}`}
+  description={`${t.pages.postsDesc}${page.currentPage > 1 ? ` Page ${page.currentPage}.` : ""}`}
+>
   <Header />
 
   <Breadcrumb />
 
-  <Main pageTitle={t.pages.postsTitle} pageDesc={t.pages.postsDesc}>
+  <Main pageTitle={pageTitle} pageDesc={t.pages.postsDesc}>
+    {
+      page.data.length === 0 && (
+        <div class="empty-state">
+          <>
+            <h2>{config.home.emptyTitle}</h2>
+            <p>{config.home.emptyDescription}</p>
+          </>
+        </div>
+      )
+    }
     <ul>
       {page.data.map(data => <Card {...data} />)}
     </ul>

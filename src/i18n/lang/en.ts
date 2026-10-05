@@ -3,7 +3,7 @@ import type { UIStrings } from "../types";
 export default {
   nav: {
     home: "Home",
-    posts: "Posts",
+    posts: "Writing",
     tags: "Tags",
     about: "About",
     archives: "Archives",
@@ -44,14 +44,14 @@ export default {
     tagsTitle: "Tags",
     tagsDesc: "All the tags used in posts.",
 
-    postsTitle: "Posts",
-    postsDesc: "All the articles I've posted.",
+    postsTitle: "Writing",
+    postsDesc: "Articles and notes, in one place.",
 
     archivesTitle: "Archives",
-    archivesDesc: "All the articles I've archived.",
+    archivesDesc: "Writing by publication date.",
 
     searchTitle: "Search",
-    searchDesc: "Search any article ...",
+    searchDesc: "Find articles and notes.",
   },
   a11y: {
     skipToContent: "Skip to content",

@@ -1,0 +1,34 @@
+---
+import { Image } from "astro:assets";
+import type { CollectionEntry } from "astro:content";
+import config from "@/config";
+
+type Props = {
+  data: CollectionEntry<"posts">["data"];
+  eager?: boolean;
+  widthRem?: number;
+};
+const {
+  data,
+  eager = false,
+  widthRem = config.design.layout.readingWidthRem,
+} = Astro.props;
+---
+
+{
+  data.cover && (
+    <figure class="post-cover">
+      <Image
+        src={data.cover}
+        style={{ aspectRatio: `${data.cover.width} / ${data.cover.height}` }}
+        alt={data.coverAlt!}
+        widths={[320, 640, 960, 1280]}
+        sizes={`(max-width: 639px) calc(100vw - 40px), (max-width: ${widthRem + 4}rem) calc(100vw - 64px), ${widthRem}rem`}
+        format="webp"
+        loading={eager ? "eager" : "lazy"}
+        fetchpriority={eager ? "high" : "auto"}
+      />
+      {data.coverCaption && <figcaption>{data.coverCaption}</figcaption>}
+    </figure>
+  )
+}

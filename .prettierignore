@@ -7,6 +7,9 @@
 !/.github
 !tsconfig.json
 !astro.config.ts
+!astro-paper.config.ts
+!/scripts
+!/tests
 !package.json
 !.prettierrc
 !eslint.config.js

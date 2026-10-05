@@ -23,17 +23,196 @@
 }
 
 @utility max-w-app {
-  @apply max-w-3xl;
+  max-width: var(--site-width);
 }
 
 @utility app-layout {
-  @apply max-w-app mx-auto w-full px-4;
+  @apply max-w-app mx-auto w-full px-5 sm:px-8;
 }
 
 @utility active-nav {
-  @apply underline decoration-wavy decoration-2 underline-offset-8;
+  @apply text-accent underline underline-offset-8;
 }
 
 :target {
   scroll-margin-block: 1rem;
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+  body {
+    line-height: 1.65;
+  }
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: var(--font-heading);
+    font-weight: 400;
+    line-height: 1.2;
+    overflow-wrap: anywhere;
+  }
+  a {
+    text-underline-offset: 0.25em;
+  }
+  img {
+    max-width: 100%;
+    height: auto;
+  }
+  code,
+  pre {
+    font-family: var(--font-code);
+  }
+  main {
+    min-width: 0;
+  }
+  ::selection {
+    background: var(--accent);
+    color: var(--accent-foreground);
+  }
+}
+
+.brand {
+  font-family: var(--font-heading);
+  font-size: 1.6rem;
+  letter-spacing: -0.04em;
+}
+.masthead {
+  padding-block: clamp(3rem, 8vw, 6rem);
+  border-bottom: 1px solid var(--border);
+}
+.eyebrow,
+.section-label {
+  font-family: var(--font-ui);
+  color: var(--accent);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+}
+.masthead h1 {
+  font-size: clamp(3rem, 9vw, 5rem);
+  letter-spacing: -0.05em;
+  margin-block: 1rem 1.5rem;
+}
+.masthead .intro {
+  color: var(--muted);
+  max-width: 35rem;
+  font-size: 1.125rem;
+}
+.writing-section {
+  padding-block: 2.5rem 1rem;
+}
+.post-card {
+  border-bottom: 1px solid var(--border);
+  padding-block: 1.5rem;
+}
+.post-card h2,
+.post-card h3 {
+  font-size: clamp(1.5rem, 4vw, 1.85rem);
+  letter-spacing: -0.025em;
+}
+.post-card a {
+  color: var(--foreground);
+}
+.post-card a:hover {
+  color: var(--accent);
+}
+.post-card p {
+  color: var(--muted);
+  margin-top: 0.75rem;
+}
+.post-card .datetime {
+  margin-top: 0.65rem;
+}
+.post-card.featured-card h3 {
+  font-size: clamp(1.85rem, 5vw, 2.6rem);
+}
+.empty-state {
+  padding: 2rem;
+  margin-block: 2.5rem;
+  background: var(--wash);
+}
+.empty-state h2 {
+  font-size: 1.75rem;
+  margin-bottom: 0.5rem;
+}
+.empty-state p {
+  color: var(--muted);
+}
+.page-heading {
+  font-size: clamp(2.3rem, 7vw, 3.5rem);
+  letter-spacing: -0.035em;
+  margin-block: 1.25rem;
+}
+.page-description {
+  color: var(--muted);
+  margin-bottom: 2rem;
+}
+.post-layout {
+  max-width: calc(var(--reading-width) + 4rem);
+  padding-top: 1.5rem;
+}
+.post-title {
+  font-size: clamp(2.25rem, 6vw, 3.75rem);
+  letter-spacing: -0.035em;
+}
+.post-meta {
+  color: var(--muted);
+  font-size: 0.875rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1rem;
+  margin-block: 1.5rem;
+}
+.post-cover {
+  margin-block: 2rem;
+}
+.post-cover img {
+  width: 100%;
+}
+.post-cover figcaption {
+  color: var(--muted);
+  font: 0.8125rem/1.6 var(--font-ui);
+  margin-top: 0.75rem;
+}
+footer {
+  color: var(--muted);
+  font-size: 0.8125rem;
+}
+.table-scroll {
+  overflow-x: auto;
+  max-width: 100%;
+  margin-block: 2rem;
+}
+.code-wrapper {
+  position: relative;
+  padding-top: 1.5rem;
+}
+.copy-code {
+  position: absolute;
+  top: 0;
+  right: 0;
+  padding: 0.25rem 0.5rem;
+  color: var(--foreground);
+  background: var(--wash);
+  font: 0.75rem/1.5 var(--font-ui);
+  border: 1px solid var(--accent);
+}
+.heading-link {
+  color: var(--muted);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    transition-duration: 0s !important;
+    animation-duration: 0s !important;
+  }
 }
