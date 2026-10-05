@@ -93,6 +93,17 @@ export async function checkOutput(root = "dist") {
   }
   const sitemap = await readFile(join(root, "sitemap-0.xml"), "utf8");
   assert.ok(sitemap.includes(`${origin}/`));
+  const sitemapIndex = await readFile(join(root, "sitemap-index.xml"), "utf8");
+  for (const xml of [sitemapIndex, sitemap]) {
+    const locations = [...xml.matchAll(/<loc>([^<]+)<\/loc>/g)];
+    assert.ok(locations.length, "Sitemap contains URLs");
+    for (const [, url] of locations)
+      assert.equal(
+        new URL(url).origin,
+        origin,
+        "Sitemap uses configured origin"
+      );
+  }
   assert.ok(!/\/404|\/search\//.test(sitemap));
   assert.ok(
     !sitemap.includes("index.png"),
@@ -100,6 +111,11 @@ export async function checkOutput(root = "dist") {
   );
   const robots = await readFile(join(root, "robots.txt"), "utf8");
   assert.ok(robots.includes(`Sitemap: ${origin}/sitemap-index.xml`));
+  const rss = await readFile(join(root, "rss.xml"), "utf8");
+  const feedLinks = [...rss.matchAll(/<link>([^<]+)<\/link>/g)];
+  assert.ok(feedLinks.length, "RSS contains links");
+  for (const [, url] of feedLinks)
+    assert.equal(new URL(url).origin, origin, "RSS uses configured origin");
   await access(join(root, "pagefind", "pagefind.js"));
   const searchEntry = JSON.parse(
     await readFile(join(root, "pagefind", "pagefind-entry.json"), "utf8")
