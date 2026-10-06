@@ -46,6 +46,7 @@ const recent = posts.filter(
               <Card
                 variant="h3"
                 featured
+                placement="featured"
                 showCover={home.showFeaturedCover}
                 {...post}
               />
@@ -62,7 +63,7 @@ const recent = posts.filter(
           </h2>
           <ul>
             {recent.slice(0, postsConfig.perIndex).map(post => (
-              <Card variant="h3" {...post} />
+              <Card variant="h3" placement="recent" {...post} />
             ))}
           </ul>
         </section>

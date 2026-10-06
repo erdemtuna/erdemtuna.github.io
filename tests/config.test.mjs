@@ -10,6 +10,7 @@ const { designStyles } = loadSource("src/utils/design.ts");
 const resolved = loadSource("src/config.ts", {
   "@/astro-paper.config": { default: config },
   "astro:env/client": { PUBLIC_GOOGLE_SITE_VERIFICATION: undefined },
+  "./utils/analyticsSettings": loadSource("src/utils/analyticsSettings.ts"),
 }).default;
 
 test("single settings file resolves every palette, font and layout token", () => {

@@ -66,6 +66,16 @@ export default defineConfig({
         context: "client",
         optional: true,
       }),
+      PUBLIC_GA_MEASUREMENT_ID: envField.string({
+        access: "public",
+        context: "client",
+        optional: true,
+      }),
+      PUBLIC_GA_ENABLED: envField.boolean({
+        access: "public",
+        context: "client",
+        default: false,
+      }),
     },
   },
   experimental: {

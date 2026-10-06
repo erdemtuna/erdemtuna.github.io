@@ -23,6 +23,12 @@ const locale = Astro.currentLocale ?? config.site.lang;
       aria-label="Supporting links"
     >
       <a href={getAssetPath("rss.xml")}>RSS</a>
+      <a href={getRelativeLocaleUrl(locale, "privacy")}>Privacy</a>
+      <a
+        href={`${getRelativeLocaleUrl(locale, "privacy")}#analytics`}
+        data-analytics-preferences
+        hidden>Analytics preferences</a
+      >
       <a href={getRelativeLocaleUrl(locale, "tags")}>Tags</a>
       {
         config.features.showArchives && (

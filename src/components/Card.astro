@@ -1,6 +1,6 @@
 ---
 import type { CollectionEntry } from "astro:content";
-import { getPostUrl } from "@/utils/getPostPaths";
+import { getPostSlug, getPostUrl } from "@/utils/getPostPaths";
 import { toTransitionName } from "@/utils/toTransitionName";
 import Datetime from "./Datetime.astro";
 import PostCover from "./PostCover.astro";
@@ -10,6 +10,7 @@ type Props = {
   variant?: "h2" | "h3";
   featured?: boolean;
   showCover?: boolean;
+  placement?: "featured" | "recent" | "listing";
 } & CollectionEntry<"posts">;
 
 const {
@@ -19,6 +20,7 @@ const {
   filePath,
   featured = false,
   showCover = false,
+  placement = "listing",
 } = Astro.props;
 
 const { title, description, ...props } = data;
@@ -36,6 +38,8 @@ const { title, description, ...props } = data;
   }
   <a
     href={getPostUrl(id, filePath, Astro.currentLocale)}
+    data-analytics-post={getPostSlug(id, filePath)}
+    data-analytics-placement={placement}
     class:list={[
       "inline-block",
       "underline-offset-4 hover:underline",

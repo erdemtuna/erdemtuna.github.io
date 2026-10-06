@@ -5,6 +5,7 @@ import { getAssetPath } from "@/utils/withBase";
 import config from "@/config";
 import { designStyles } from "@/utils/design";
 import "@/styles/global.css";
+import Analytics from "@/components/Analytics.astro";
 
 type Props = {
   title?: string;
@@ -128,6 +129,7 @@ const rssHref = getAssetPath("rss.xml");
     class="bg-background font-app text-foreground selection:bg-accent/75 selection:text-accent-foreground flex min-h-svh flex-col"
   >
     <slot />
+    <Analytics />
     <script>
       import "@/scripts/theme";
     </script>

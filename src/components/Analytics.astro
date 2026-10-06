@@ -1,0 +1,114 @@
+---
+import { getCollection } from "astro:content";
+import { analytics } from "@/config";
+import { getSortedPosts } from "@/utils/getSortedPosts";
+import { getPostSlug, getPostUrl } from "@/utils/getPostPaths";
+import { jsonForHtml } from "@/utils/structuredData";
+
+const enabled = import.meta.env.PROD && analytics;
+const settings = enabled
+  ? {
+      ...analytics,
+      postPaths: Object.fromEntries(
+        getSortedPosts(await getCollection("posts")).map(post => [
+          getPostUrl(post.id, post.filePath, Astro.currentLocale),
+          getPostSlug(post.id, post.filePath),
+        ])
+      ),
+    }
+  : undefined;
+---
+
+{
+  settings && (
+    <>
+      <script
+        id="analytics-config"
+        type="application/json"
+        is:inline
+        set:html={jsonForHtml(settings)}
+      />
+      <section
+        id="analytics-consent"
+        aria-labelledby="analytics-consent-title"
+        tabindex="-1"
+        hidden
+        transition:persist
+      >
+        <h2 id="analytics-consent-title">Analytics preferences</h2>
+        <p>
+          May I use Google Analytics to understand visits and article clicks?
+          Analytics is optional and stays off unless you accept.{" "}
+          <a href="/privacy/">Read the privacy notice</a>.
+        </p>
+        <p data-analytics-status role="status" />
+        <div class="analytics-actions">
+          <button type="button" data-analytics-choice="accepted">
+            Accept analytics
+          </button>
+          <button type="button" data-analytics-choice="rejected">
+            Reject analytics
+          </button>
+          <button type="button" data-analytics-dismiss hidden>
+            Close preferences
+          </button>
+        </div>
+      </section>
+    </>
+  )
+}
+
+<script>
+  import { setupAnalytics } from "@/scripts/analytics";
+  setupAnalytics();
+</script>
+
+<style>
+  #analytics-consent {
+    position: fixed;
+    z-index: 100;
+    inset-inline: 1rem;
+    bottom: 1rem;
+    max-width: 42rem;
+    max-height: calc(100svh - 2rem);
+    overflow-y: auto;
+    margin-inline: auto;
+    padding: 1.25rem;
+    border: 1px solid var(--border);
+    background: var(--background);
+    color: var(--foreground);
+    box-shadow: 0 0.5rem 2rem #0003;
+    font-family: var(--font-ui);
+    font-size: 0.95rem;
+  }
+  #analytics-consent[hidden] {
+    display: none;
+  }
+  h2 {
+    font-size: 1.3rem;
+    margin-bottom: 0.75rem;
+  }
+  a {
+    text-decoration: underline;
+    color: var(--accent);
+  }
+  [data-analytics-status]:not(:empty) {
+    margin-top: 0.75rem;
+  }
+  .analytics-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin-top: 1rem;
+  }
+  button {
+    min-height: 2.75rem;
+    padding: 0.5rem 0.75rem;
+    border: 1px solid var(--accent);
+    color: var(--accent);
+    background: var(--background);
+  }
+  button:hover {
+    background: var(--wash);
+  }
+</style>
