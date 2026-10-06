@@ -6,7 +6,12 @@
  */
 import userConfig from "@/astro-paper.config";
 import type { ResolvedAstroPaperConfig } from "./types/config";
-import { PUBLIC_GOOGLE_SITE_VERIFICATION } from "astro:env/client";
+import {
+  PUBLIC_GOOGLE_SITE_VERIFICATION,
+  PUBLIC_GA_MEASUREMENT_ID,
+  PUBLIC_GA_ENABLED,
+} from "astro:env/client";
+import { resolveAnalyticsSettings } from "./utils/analyticsSettings";
 
 const DEFAULT_OG_IMAGE = "default-og.jpg";
 
@@ -40,3 +45,9 @@ const config: ResolvedAstroPaperConfig = {
 };
 
 export default config;
+
+export const analytics = resolveAnalyticsSettings(
+  config.site.url,
+  PUBLIC_GA_MEASUREMENT_ID,
+  PUBLIC_GA_ENABLED
+);

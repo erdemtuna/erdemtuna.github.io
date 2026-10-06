@@ -1,0 +1,104 @@
+---
+import Layout from "@/layouts/Layout.astro";
+import Header from "@/components/Header.astro";
+import Footer from "@/components/Footer.astro";
+import Main from "@/components/Main.astro";
+import config, { analytics } from "@/config";
+
+const enabled = import.meta.env.PROD && analytics;
+---
+
+<Layout
+  title={`Privacy | ${config.site.title}`}
+  description="How this website handles optional analytics and your privacy choices."
+>
+  <Header />
+  <Main pageTitle="Privacy" class="app-prose">
+    <p>
+      This is {config.site.author}'s personal writing website, hosted on GitHub
+      Pages. GitHub processes requests to serve the website under its
+      <a
+        href="https://docs.github.com/en/site-policy/privacy-policies/github-general-privacy-statement"
+        >privacy statement</a
+      >.
+    </p>
+    <h2 id="analytics">Optional analytics</h2>
+    <p data-analytics-state>
+      {
+        enabled
+          ? "Optional Google Analytics is available on the published website, but stays off unless you accept."
+          : "Google Analytics is not enabled in this version of the website."
+      }
+    </p>
+    <p>
+      When enabled and accepted, Google Analytics 4 helps me understand which
+      pages attract readers, where visits come from, and which article and
+      external links readers select. Google receives page and event information,
+      including page titles, sanitized URLs and referrers, article identifiers,
+      link destinations, and campaign labels. Analytics can also report
+      engagement time and browser, device, and approximate location information.
+    </p>
+    <p>
+      Accepting analytics allows Google Analytics to use first-party cookies
+      such as <code>_ga</code> and <code>_ga_...</code> to distinguish browsers and
+      sessions. These identifiers do not tell me your name. No advertising personalization,
+      Google Signals, account identity tracking, or session recordings are enabled
+      by this integration.
+    </p>
+    <p>
+      The website does not intentionally send raw site-search terms to
+      Analytics. Unneeded URL query parameters and fragments are removed from
+      the page and link information sent by the integration. Please do not put
+      personal information in campaign parameters.
+    </p>
+    <p>
+      No Google Analytics script, analytics cookies, or analytics requests are
+      initiated until you accept. Rejecting analytics does not limit access to
+      any articles or website features.
+    </p>
+    <h2>Changing your choice</h2>
+    <p>
+      When analytics is available, use the footer's Analytics preferences
+      control to accept or reject analytics later. Your explicit choice is
+      stored in your browser's local storage under <code>analytics-consent</code
+      >. If the consent policy materially changes, you will be asked again.
+    </p>
+    <p>
+      <a href="#analytics" data-analytics-preferences hidden
+        >Change analytics preferences</a
+      >
+    </p>
+    <p>
+      Withdrawing consent stops new analytics collection, removes accessible
+      Google Analytics cookies for this website, and reloads the page without
+      the tracker. Withdrawal does not erase information already sent to Google.
+      Clearing your website storage also removes your saved preference.
+    </p>
+    <p>
+      Google processes analytics data under its
+      <a href="https://policies.google.com/privacy">privacy policy</a>. Read
+      <a href="https://support.google.com/analytics/answer/6004245"
+        >Google's information on safeguarding Analytics data</a
+      > for more detail.
+    </p>
+    <h2>Other local storage and search</h2>
+    <p>
+      The website stores your color-theme preference locally. Session storage
+      remembers navigation context for the back button. These preferences are
+      separate from analytics consent. Site search uses a downloaded Pagefind
+      index in your browser rather than sending your search terms to Google.
+    </p>
+    <h2>Google Search Console</h2>
+    <p>
+      Search Console provides aggregate reports about this website's appearance
+      in Google Search. It does not require an Analytics tracker on this website
+      and does not tell me which named person visited an article.
+    </p>
+    <h2>Contact</h2>
+    <p>
+      For questions about this website, contact me through
+      <a href="https://www.linkedin.com/in/erdem-tuna/">LinkedIn</a>.
+    </p>
+  </Main>
+  <Footer />
+</Layout>

@@ -18,11 +18,44 @@ export async function checkOutput(root = "dist") {
     paths.length >= 7,
     "Core routes must be built, including empty /posts/"
   );
+  await access(join(root, "privacy", "index.html"));
+  const { resolveAnalyticsSettings } = loadSource(
+    "src/utils/analyticsSettings.ts"
+  );
+  const analytics = resolveAnalyticsSettings(
+    origin,
+    process.env.PUBLIC_GA_MEASUREMENT_ID,
+    process.env.PUBLIC_GA_ENABLED === "true"
+  );
   const titles = new Set();
   for (const path of paths) {
     const html = await readFile(join(root, path), "utf8");
     const head = html.match(/<head>([\s\S]*?)<\/head>/)?.[1];
     assert.ok(head, `${path}: head exists`);
+    const manifest = html.match(
+      /<script[^>]*id="analytics-config"[^>]*>([\s\S]*?)<\/script>/
+    )?.[1];
+    if (analytics) {
+      assert.ok(manifest, `${path}: configured analytics manifest`);
+      const parsed = JSON.parse(manifest);
+      assert.equal(parsed.measurementId, analytics.measurementId);
+      assert.equal(parsed.origin, origin);
+      assert.equal(
+        (html.match(/id="analytics-consent"/g) ?? []).length,
+        1,
+        `${path}: one consent panel`
+      );
+      assert.ok(
+        !html.includes('src="https://www.googletagmanager.com'),
+        `${path}: no Google script loaded by HTML`
+      );
+      for (const postPath of Object.keys(parsed.postPaths)) {
+        await access(join(root, postPath, "index.html"));
+      }
+    } else {
+      assert.equal(manifest, undefined, `${path}: analytics disabled`);
+      assert.ok(!html.includes('id="analytics-consent"'));
+    }
     assert.ok(
       !/astro-paper\.pages\.dev|satna\.ing|satnaing|username|yourmail/.test(
         html

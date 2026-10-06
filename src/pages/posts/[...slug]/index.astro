@@ -92,7 +92,11 @@ const image =
       <Datetime {pubDatetime} {modDatetime} {timezone} />
       {
         sourceUrl && (
-          <a href={sourceUrl} data-pagefind-ignore>
+          <a
+            href={sourceUrl}
+            data-pagefind-ignore
+            data-analytics-role="publication"
+          >
             {sourceLabel ?? new URL(sourceUrl).hostname}
           </a>
         )

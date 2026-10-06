@@ -1,7 +1,7 @@
 ---
 import IconArrowLeft from "@/assets/icons/IconArrowLeft.svg";
 import IconArrowRight from "@/assets/icons/IconArrowRight.svg";
-import { getPostUrl } from "@/utils/getPostPaths";
+import { getPostSlug, getPostUrl } from "@/utils/getPostPaths";
 import { useTranslations } from "@/i18n";
 import config from "@/config";
 
@@ -26,6 +26,8 @@ const t = useTranslations(locale);
     prevPost && (
       <a
         href={getPostUrl(prevPost.id, prevPost.filePath, locale)}
+        data-analytics-post={getPostSlug(prevPost.id, prevPost.filePath)}
+        data-analytics-placement="adjacent"
         class="hover:text-accent flex w-full min-w-0 gap-1"
       >
         <IconArrowLeft class="inline-block flex-none rtl:rotate-180" />
@@ -40,6 +42,8 @@ const t = useTranslations(locale);
     nextPost && (
       <a
         href={getPostUrl(nextPost.id, nextPost.filePath, locale)}
+        data-analytics-post={getPostSlug(nextPost.id, nextPost.filePath)}
+        data-analytics-placement="adjacent"
         class="hover:text-accent flex w-full min-w-0 justify-end gap-1 text-end sm:col-start-2"
       >
         <div class="min-w-0">
