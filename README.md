@@ -129,9 +129,10 @@ Register these **event-scoped custom dimensions** before collecting data:
 
 No Google script, analytics requests, analytics cookies or analytics event queue
 is created before acceptance. Accept and Reject have equal prominence. A versioned
-choice is stored under `analytics-consent` in local storage. Footer preferences
-allow changing it; withdrawal blocks collection, removes accessible GA cookies,
-and reloads without the tracker. If saving a choice fails, analytics stays off
+choice is stored under `analytics-consent` in local storage. The compact notice
+sits in the bottom-right corner on desktop and along the bottom edge on mobile.
+Footer preferences allow changing it; withdrawal blocks collection, removes
+accessible GA cookies, and reloads without the tracker. If saving a choice fails, analytics stays off
 and the UI explains the storage problem. Theme and navigation storage are separate.
 
 | Event         | Parameters and purpose                                                                                                    |
