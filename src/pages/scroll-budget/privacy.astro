@@ -1,0 +1,161 @@
+---
+import Layout from "@/layouts/Layout.astro";
+import Header from "@/components/Header.astro";
+import Footer from "@/components/Footer.astro";
+import Main from "@/components/Main.astro";
+import config from "@/config";
+---
+
+<Layout
+  title={`Scroll Budget Privacy Policy | ${config.site.title}`}
+  description="How Scroll Budget processes website budgets and browsing activity locally on your device."
+>
+  <Header />
+  <Main pageTitle="Scroll Budget Privacy Policy" class="app-prose">
+    <p>
+      Effective date: October 7, 2026<br />
+      Applies to: Scroll Budget, version 1.0.0<br />
+      Developer: erdemtuna
+    </p>
+    <p>
+      Scroll Budget helps you set daily time and hourly or daily visit budgets
+      for websites and website sections. It processes browser activity locally
+      to provide that feature. The extension does not send your rules, browsing
+      activity, or usage to the developer or to a server.
+    </p>
+    <h2>Information processed on your device</h2>
+    <ul>
+      <li>
+        <strong>Your settings:</strong> website domains and optional path prefixes,
+        enabled/paused rules, time and visit budgets, frequency units, and enforcement
+        modes.
+      </li>
+      <li>
+        <strong>Usage counters:</strong> foreground time and visit counts for each
+        rule, together with the current local day and hour used to reset those counters.
+      </li>
+      <li>
+        <strong>Current browser activity:</strong> top-level navigation URLs, tab
+        identifiers, the current active tab, page visibility, and whether Chrome's
+        window is focused or minimized. Chrome navigation events can reveal URLs for
+        tabs outside your selected rules as well. The extension uses those events
+        to distinguish entering and leaving rules, but does not retain unrelated URLs.
+        Leaving every active permitted rule clears that tab's tracked state.
+      </li>
+      <li>
+        <strong>Temporary tracked-tab state:</strong> rule membership, whether a visit
+        was admitted, temporary override flags, and locally generated visit/gate tokens.
+        Current matching URLs are held in the live background worker's memory, not
+        persisted for admitted visits. A full original URL is kept in session storage
+        only while a matching tracked visit has a pending limit page, so a permitted
+        retry or override can return to the right page. Full return URLs can include
+        query strings and fragments; a website may put personal or sensitive information
+        in those parts of its URL.
+      </li>
+    </ul>
+    <p>
+      The extension does not read page text, form values, messages, account
+      credentials, cookies, payment information, or downloaded files. Its
+      content script reports visibility and displays its own warning notice; it
+      does not scrape the site's content. The word <code>continue</code> is checked
+      to authorize an override and is not a password or an account credential.
+    </p>
+    <h2>Why this information is used</h2>
+    <p>
+      The information is used only to match your website rules, count visits and
+      focused foreground time, apply your chosen warning/override/blocking mode,
+      display your budgets, reset counters, and return the same tab to its
+      original page after an eligible retry or deliberate override. Temporary
+      state lets an admitted visit survive a page reload or extension-worker
+      suspension without becoming another visit.
+    </p>
+    <h2>Storage and retention</h2>
+    <ul>
+      <li>
+        Rules and current per-rule counters are stored in Chrome's <code
+          >storage.local</code
+        > on your device. They are not stored in <code>storage.sync</code>.
+        Usage buckets reset when the extension reconciles the new local day or
+        hour; no long-term usage timeline is kept. Settings remain until you
+        edit/delete them or uninstall the extension.
+      </li>
+      <li>
+        Minimal tracked-tab state and pending-gate return URLs are stored in
+        Chrome's <code>storage.session</code>. Untracked URLs are never retained
+        there. Leaving all active permitted rules, closing the tab, or Chrome
+        clearing extension session storage removes the tab state; Chrome clears
+        session storage on browser restart, extension reload/update, or
+        disabling the extension. Returning from a gate removes its stored full
+        URL. Background-worker suspension alone does not clear a pending gate or
+        admitted visit; the worker recovers current matching URLs from Chrome
+        when it restarts.
+      </li>
+      <li>
+        Chrome manages extension storage and site-access grants. Scroll Budget
+        does not add application-level encryption to local storage. Anyone with
+        sufficient access to your browser profile or computer may be able to
+        inspect local extension data.
+      </li>
+    </ul>
+    <h2>Sharing, transmission, and third parties</h2>
+    <p>
+      Scroll Budget has no account, backend, analytics, advertising, telemetry,
+      remote scripts, or data-sale service. Its runtime messages pass between
+      extension components within your browser, not to an external service. The
+      developer does not receive or inspect your rules or browsing usage through
+      the extension.
+    </p>
+    <p>
+      When you choose to visit or return to a website, Chrome makes the ordinary
+      website request, which is governed by that website's practices. Chrome and
+      the Chrome Web Store may process installation, update, or store-support
+      information under Google's policies independently of Scroll Budget. If you
+      voluntarily contact the developer through store support, the information
+      you choose to send is handled by that support service and used to respond;
+      avoid including sensitive URLs or personal information.
+    </p>
+    <h2>Your controls</h2>
+    <p>
+      You can view, edit, pause, or delete rules in <strong>Manage rules</strong
+      >. Deleting a rule deletes its stored per-rule usage. Pausing a rule stops
+      its budget tracking but keeps the rule and counters. Chrome's extension
+      site-access settings let you revoke a site's permission; a rule without
+      permission is labeled <strong>Needs site permission</strong> and does not enforce
+      tracking. Existing Chrome grants are not automatically removed when you pause
+      or delete a rule.
+    </p>
+    <p>
+      Leaving a rule or closing its tab ends the current override. Restarting
+      Chrome clears temporary session state. Uninstalling Scroll Budget removes
+      its extension storage under Chrome's normal behavior. Incognito is not
+      supported.
+    </p>
+    <h2>Limited Use</h2>
+    <p>
+      Scroll Budget's use of information received from Chrome APIs adheres to
+      the Chrome Web Store User Data Policy, including the Limited Use
+      requirements. Browser activity is used only for the prominently described
+      budgeting feature. It is not used or transferred for advertising, sold to
+      third parties, or used to determine creditworthiness or lending
+      eligibility. The extension does not make your browser activity available
+      for human review by the developer.
+    </p>
+    <h2>Changes and contact</h2>
+    <p>
+      This policy will be updated if the extension's data practices change. The
+      effective date and applicable version identify this policy. The canonical
+      policy location is <a href="https://erdemtuna.dev/scroll-budget/privacy/"
+        >erdemtuna.dev/scroll-budget/privacy/</a
+      >. For questions, use the contact/support channel on Scroll Budget's
+      Chrome Web Store listing once published. The developer's identity is <a
+        href="https://github.com/erdemtuna">erdemtuna on GitHub</a
+      >; the source repository is private and is not a public support channel.
+    </p>
+    <p>
+      You can also contact the developer through <a
+        href="https://www.linkedin.com/in/erdem-tuna/">LinkedIn</a
+      >.
+    </p>
+  </Main>
+  <Footer />
+</Layout>
